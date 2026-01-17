@@ -8,11 +8,12 @@ class Settings(BaseSettings):
     github_username: str
 
     # Atlassian (Confluence & Jira)
-    atlassian_url: str
+    atlassian_url: str  # Jira URL
     atlassian_email: str
     atlassian_api_token: str
     atlassian_account_id: str
     atlassian_cloud_id: str
+    confluence_url: str | None = None  # Optional: separate Confluence URL if different tenant
 
     # AI Summaries (optional, disabled by default)
     enable_ai_summaries: bool = False

@@ -13,17 +13,19 @@ def get_jira_tickets(start_date: date, end_date: date) -> list[dict]:
         f"ORDER BY created DESC"
     )
 
-    # Use api.atlassian.com for scoped tokens (ATAT...)
-    url = f"https://api.atlassian.com/ex/jira/{settings.atlassian_cloud_id}/rest/api/3/search/jql"
-    headers = {
-        "Authorization": f"Bearer {settings.atlassian_api_token}",
-        "Accept": "application/json"
-    }
+    # Use site-specific URL with Basic auth for classic tokens
+    base_url = settings.atlassian_url.rstrip("/")
+    url = f"{base_url}/rest/api/3/search/jql"
 
     response = requests.get(
         url,
-        headers=headers,
-        params={"jql": jql, "maxResults": 100}
+        auth=(settings.atlassian_email, settings.atlassian_api_token),
+        headers={"Accept": "application/json"},
+        params={
+            "jql": jql,
+            "maxResults": 100,
+            "fields": "summary,status,issuetype,description"
+        }
     )
     response.raise_for_status()
 

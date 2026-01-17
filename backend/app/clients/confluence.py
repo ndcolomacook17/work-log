@@ -13,24 +13,20 @@ def get_confluence_docs(start_date: date, end_date: date) -> list[dict]:
         f"ORDER BY created DESC"
     )
 
-    # Use api.atlassian.com for scoped tokens (ATAT...)
-    url = f"https://api.atlassian.com/ex/confluence/{settings.atlassian_cloud_id}/wiki/rest/api/search"
-    headers = {
-        "Authorization": f"Bearer {settings.atlassian_api_token}",
-        "Accept": "application/json"
-    }
+    # Use confluence_url if set, otherwise fall back to atlassian_url
+    base_url = (settings.confluence_url or settings.atlassian_url).rstrip("/")
+    url = f"{base_url}/wiki/rest/api/search"
 
     response = requests.get(
         url,
-        headers=headers,
+        auth=(settings.atlassian_email, settings.atlassian_api_token),
+        headers={"Accept": "application/json"},
         params={"cql": cql, "limit": 100}
     )
     response.raise_for_status()
 
     results = response.json()
     docs = []
-
-    base_url = settings.atlassian_url.rstrip("/")
     for result in results.get("results", []):
         content = result.get("content", result)
         space_key = content.get("space", {}).get("key", "")
