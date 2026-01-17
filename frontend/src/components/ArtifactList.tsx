@@ -20,8 +20,8 @@ export function ArtifactList({ data, loading, error }: ArtifactListProps) {
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-        <div className="text-red-800">Error: {error}</div>
+      <div className="p-4 bg-red-900/30 border border-red-800 rounded-xl">
+        <div className="text-red-400">Error: {error}</div>
       </div>
     );
   }
@@ -50,20 +50,20 @@ export function ArtifactList({ data, loading, error }: ArtifactListProps) {
   return (
     <div className="space-y-8">
       <div className="flex gap-4 text-sm">
-        <span className="px-3 py-1 bg-gray-100 rounded-full">
+        <span className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full border border-gray-700">
           {data.pull_requests.length} PRs
         </span>
-        <span className="px-3 py-1 bg-gray-100 rounded-full">
+        <span className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full border border-gray-700">
           {data.confluence_docs.length} Docs
         </span>
-        <span className="px-3 py-1 bg-gray-100 rounded-full">
+        <span className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full border border-gray-700">
           {data.jira_tickets.length} Tickets
         </span>
       </div>
 
       {data.pull_requests.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-gray-800">
+          <h2 className="text-lg font-semibold mb-3 text-gray-200">
             Pull Requests
           </h2>
           <div className="space-y-3">
@@ -76,7 +76,7 @@ export function ArtifactList({ data, loading, error }: ArtifactListProps) {
 
       {data.confluence_docs.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-gray-800">
+          <h2 className="text-lg font-semibold mb-3 text-gray-200">
             Confluence Documents
           </h2>
           <div className="space-y-3">
@@ -89,7 +89,7 @@ export function ArtifactList({ data, loading, error }: ArtifactListProps) {
 
       {data.jira_tickets.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-gray-800">
+          <h2 className="text-lg font-semibold mb-3 text-gray-200">
             Jira Tickets
           </h2>
           <div className="space-y-3">
