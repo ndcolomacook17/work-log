@@ -149,7 +149,6 @@ Atlassian uses API tokens for authentication along with your account identifiers
 4. Copy the token immediately
 
 #### Step 2: Find Your Account ID
-##### Note: `ATLASSIAN_URL=https://justworks-tech.atlassian.net/` for Justworks Technology
 1. Go to your Atlassian profile: `https://your-company.atlassian.net/wiki/people`
 2. Click on your profile
 3. Your Account ID is in the URL: `https://your-company.atlassian.net/wiki/people/ACCOUNT_ID_HERE`
@@ -217,7 +216,6 @@ If using a LiteLLM proxy or AWS Bedrock, also set:
 ```env
 ANTHROPIC_BASE_URL=https://your-proxy-url.com
 ```
-Example: `ANTHROPIC_BASE_URL=https://litellm.justworksai.net/`
 
 ## API Endpoints
 
