@@ -8,6 +8,7 @@ def get_confluence_docs(start_date: date, end_date: date) -> list[dict]:
 
     cql = (
         f"creator = '{settings.atlassian_account_id}' "
+        f"AND type in (page, blogpost) "
         f"AND created >= '{start_date}' "
         f"AND created <= '{end_date}' "
         f"ORDER BY created DESC"
@@ -32,7 +33,7 @@ def get_confluence_docs(start_date: date, end_date: date) -> list[dict]:
         space_key = content.get("space", {}).get("key", "")
 
         page_id = content.get("id", "")
-        page_url = f"{base_url}/wiki/spaces/{space_key}/pages/{page_id}"
+        page_url = f"{base_url}/wiki/pages/viewpage.action?pageId={page_id}"
 
         excerpt = result.get("excerpt", "")
 

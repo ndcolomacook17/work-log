@@ -12,24 +12,24 @@ export function PRCard({ pr }: PRCardProps) {
   };
 
   return (
-    <div className="p-4 bg-gray-900 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors">
-      <div className="flex items-start justify-between gap-2">
-        <a
-          href={pr.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
-        >
-          {pr.title}
-        </a>
+    <div className="p-4 bg-gray-900 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors overflow-hidden">
+      <a
+        href={pr.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-400 hover:text-blue-300 font-medium transition-colors block break-words"
+      >
+        {pr.title}
+      </a>
+      <div className="mt-2 flex items-center gap-2 flex-wrap">
         <span
-          className={`px-2 py-1 text-xs rounded-full ${stateColors[pr.state] || 'bg-gray-800 text-gray-400'}`}
+          className={`px-2 py-1 text-xs rounded-full shrink-0 ${stateColors[pr.state] || 'bg-gray-800 text-gray-400'}`}
         >
           {pr.state}
         </span>
+        <span className="text-sm text-gray-500 truncate">{pr.repo}</span>
       </div>
-      <div className="mt-1 text-sm text-gray-500">{pr.repo}</div>
-      <p className="mt-2 text-sm text-gray-400">{pr.summary}</p>
+      <p className="mt-2 text-sm text-gray-400 break-words">{pr.summary}</p>
       <div className="mt-2 text-xs text-gray-600">{pr.created_at}</div>
     </div>
   );

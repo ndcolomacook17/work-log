@@ -1,13 +1,40 @@
 import { useState, useEffect } from 'react';
-import { format, subMonths } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import { format, subMonths, startOfMonth } from 'date-fns';
 import { ConfluenceCard } from '../components/ConfluenceCard';
+import { PillButton } from '../components/PillButton';
 import { fetchArtifacts } from '../api/client';
 import type { ConfluenceDoc } from '../api/types';
 
+interface MonthInfo {
+  label: string;
+  year: number;
+  month: number;
+}
+
+function getLastSixMonths(): MonthInfo[] {
+  const months: MonthInfo[] = [];
+  const today = new Date();
+
+  for (let i = 0; i < 6; i++) {
+    const date = subMonths(today, i);
+    months.push({
+      label: format(date, 'MMM yyyy'),
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+    });
+  }
+
+  return months;
+}
+
 export function ConfluenceDocsPage() {
+  const navigate = useNavigate();
   const [docs, setDocs] = useState<ConfluenceDoc[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const months = getLastSixMonths();
 
   useEffect(() => {
     const loadDocs = async () => {
@@ -19,8 +46,9 @@ export function ConfluenceDocsPage() {
 
       try {
         const result = await fetchArtifacts(
-          format(startDate, 'yyyy-MM-dd'),
-          format(endDate, 'yyyy-MM-dd')
+          format(startOfMonth(startDate), 'yyyy-MM-dd'),
+          format(endDate, 'yyyy-MM-dd'),
+          ['confluence']
         );
         setDocs(result.confluence_docs);
       } catch (err) {
@@ -33,11 +61,30 @@ export function ConfluenceDocsPage() {
     loadDocs();
   }, []);
 
+  const handleMonthClick = (month: MonthInfo) => {
+    navigate(`/confluence/month/${month.year}/${month.month}`);
+  };
+
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-100">Confluence Documents</h1>
         <p className="text-sm text-gray-500 mt-1">Last 6 months</p>
+      </div>
+
+      <div className="mb-8">
+        <h2 className="text-sm font-medium text-gray-400 mb-3 uppercase tracking-wide">
+          Browse by Month
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {months.map((month) => (
+            <PillButton
+              key={`${month.year}-${month.month}`}
+              label={month.label}
+              onClick={() => handleMonthClick(month)}
+            />
+          ))}
+        </div>
       </div>
 
       {loading && (

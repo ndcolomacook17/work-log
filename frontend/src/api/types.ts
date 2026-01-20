@@ -24,8 +24,21 @@ export interface JiraTicket {
   summary: string;
 }
 
+export interface Interview {
+  candidate_name: string;
+  job_title: string;
+  interview_type: string;
+  scheduled_at: string;
+  status: string;
+}
+
 export interface ArtifactsResponse {
   pull_requests: PullRequest[];
   confluence_docs: ConfluenceDoc[];
   jira_tickets: JiraTicket[];
+  interviews: Interview[];
+}
+
+export interface SummaryResponse {
+  summary: string;
 }

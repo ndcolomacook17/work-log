@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format, subMonths, startOfMonth } from 'date-fns';
-import { JiraCard } from '../components/JiraCard';
+import { InterviewCard } from '../components/InterviewCard';
 import { PillButton } from '../components/PillButton';
 import { fetchArtifacts } from '../api/client';
-import type { JiraTicket } from '../api/types';
+import type { Interview } from '../api/types';
 
 interface MonthInfo {
   label: string;
@@ -28,16 +28,16 @@ function getLastSixMonths(): MonthInfo[] {
   return months;
 }
 
-export function JiraTicketsPage() {
+export function GreenhousePage() {
   const navigate = useNavigate();
-  const [tickets, setTickets] = useState<JiraTicket[]>([]);
+  const [interviews, setInterviews] = useState<Interview[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const months = getLastSixMonths();
 
   useEffect(() => {
-    const loadTickets = async () => {
+    const loadInterviews = async () => {
       setLoading(true);
       setError(null);
 
@@ -48,27 +48,27 @@ export function JiraTicketsPage() {
         const result = await fetchArtifacts(
           format(startOfMonth(startDate), 'yyyy-MM-dd'),
           format(endDate, 'yyyy-MM-dd'),
-          ['jira']
+          ['greenhouse']
         );
-        setTickets(result.jira_tickets);
+        setInterviews(result.interviews || []);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch tickets');
+        setError(err instanceof Error ? err.message : 'Failed to fetch interviews');
       } finally {
         setLoading(false);
       }
     };
 
-    loadTickets();
+    loadInterviews();
   }, []);
 
   const handleMonthClick = (month: MonthInfo) => {
-    navigate(`/jira/month/${month.year}/${month.month}`);
+    navigate(`/greenhouse/month/${month.year}/${month.month}`);
   };
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-100">Jira Tickets</h1>
+        <h1 className="text-2xl font-bold text-gray-100">Interviews</h1>
         <p className="text-sm text-gray-500 mt-1">Last 6 months</p>
       </div>
 
@@ -95,17 +95,17 @@ export function JiraTicketsPage() {
         <div className="text-center py-8 text-red-400">{error}</div>
       )}
 
-      {!loading && !error && tickets.length === 0 && (
-        <div className="text-center py-8 text-gray-500">No tickets found</div>
+      {!loading && !error && interviews.length === 0 && (
+        <div className="text-center py-8 text-gray-500">No interviews found</div>
       )}
 
-      {!loading && !error && tickets.length > 0 && (
+      {!loading && !error && interviews.length > 0 && (
         <div className="space-y-4">
           <div className="text-sm text-gray-400 mb-4">
-            {tickets.length} ticket{tickets.length !== 1 ? 's' : ''}
+            {interviews.length} interview{interviews.length !== 1 ? 's' : ''}
           </div>
-          {tickets.map((ticket, index) => (
-            <JiraCard key={`${ticket.key}-${index}`} ticket={ticket} />
+          {interviews.map((interview, index) => (
+            <InterviewCard key={index} interview={interview} />
           ))}
         </div>
       )}

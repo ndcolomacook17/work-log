@@ -1,83 +1,57 @@
-import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { startOfWeek, endOfWeek, format } from 'date-fns';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { NavBar } from './components/NavBar';
-import { WeekPicker } from './components/WeekPicker';
-import { DateRangePicker } from './components/DateRangePicker';
-import { ArtifactList } from './components/ArtifactList';
+import { LandingPage } from './pages/LandingPage';
+import { DashboardPage } from './pages/DashboardPage';
+import { MonthViewPage } from './pages/MonthViewPage';
+import { WeekViewPage } from './pages/WeekViewPage';
 import { DateRangeView } from './pages/DateRangeView';
 import { PullRequestsPage } from './pages/PullRequestsPage';
+import { PullRequestsMonthPage } from './pages/PullRequestsMonthPage';
+import { PullRequestsWeekPage } from './pages/PullRequestsWeekPage';
 import { ConfluenceDocsPage } from './pages/ConfluenceDocsPage';
+import { ConfluenceMonthPage } from './pages/ConfluenceMonthPage';
+import { ConfluenceWeekPage } from './pages/ConfluenceWeekPage';
 import { JiraTicketsPage } from './pages/JiraTicketsPage';
-import { fetchArtifacts } from './api/client';
-import type { ArtifactsResponse } from './api/types';
-
-function Dashboard() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [data, setData] = useState<ArtifactsResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showDateRangePicker, setShowDateRangePicker] = useState(false);
-
-  useEffect(() => {
-    const loadArtifacts = async () => {
-      setLoading(true);
-      setError(null);
-
-      const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
-      const weekEnd = endOfWeek(selectedDate, { weekStartsOn: 1 });
-
-      try {
-        const result = await fetchArtifacts(
-          format(weekStart, 'yyyy-MM-dd'),
-          format(weekEnd, 'yyyy-MM-dd')
-        );
-        setData(result);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch artifacts');
-        setData(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadArtifacts();
-  }, [selectedDate]);
-
-  return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
-      <h1 className="text-2xl font-bold text-gray-100 mb-6">
-        Work Output Dashboard
-      </h1>
-
-      <div className="mb-6">
-        <WeekPicker
-          selectedDate={selectedDate}
-          onWeekChange={setSelectedDate}
-          onSelectCustomDates={() => setShowDateRangePicker(true)}
-          showCustomDatesButton={!showDateRangePicker}
-        />
-      </div>
-
-      {showDateRangePicker && (
-        <DateRangePicker onCancel={() => setShowDateRangePicker(false)} />
-      )}
-
-      <ArtifactList data={data} loading={loading} error={error} />
-    </div>
-  );
-}
+import { JiraMonthPage } from './pages/JiraMonthPage';
+import { JiraWeekPage } from './pages/JiraWeekPage';
+import { GreenhousePage } from './pages/GreenhousePage';
+import { GreenhouseMonthPage } from './pages/GreenhouseMonthPage';
+import { GreenhouseWeekPage } from './pages/GreenhouseWeekPage';
 
 function App() {
+  const location = useLocation();
+  const isLandingPage = location.pathname === '/';
+
   return (
     <div className="min-h-screen bg-gray-950">
-      <NavBar />
+      {!isLandingPage && <NavBar />}
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        {/* Landing and Dashboard */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/month/:year/:month" element={<MonthViewPage />} />
+        <Route path="/week/:startDate/:endDate" element={<WeekViewPage />} />
         <Route path="/range/:startDate/:endDate" element={<DateRangeView />} />
+
+        {/* Pull Requests */}
         <Route path="/pull-requests" element={<PullRequestsPage />} />
+        <Route path="/pull-requests/month/:year/:month" element={<PullRequestsMonthPage />} />
+        <Route path="/pull-requests/week/:startDate/:endDate" element={<PullRequestsWeekPage />} />
+
+        {/* Confluence */}
         <Route path="/confluence" element={<ConfluenceDocsPage />} />
+        <Route path="/confluence/month/:year/:month" element={<ConfluenceMonthPage />} />
+        <Route path="/confluence/week/:startDate/:endDate" element={<ConfluenceWeekPage />} />
+
+        {/* Jira */}
         <Route path="/jira" element={<JiraTicketsPage />} />
+        <Route path="/jira/month/:year/:month" element={<JiraMonthPage />} />
+        <Route path="/jira/week/:startDate/:endDate" element={<JiraWeekPage />} />
+
+        {/* Greenhouse */}
+        <Route path="/greenhouse" element={<GreenhousePage />} />
+        <Route path="/greenhouse/month/:year/:month" element={<GreenhouseMonthPage />} />
+        <Route path="/greenhouse/week/:startDate/:endDate" element={<GreenhouseWeekPage />} />
       </Routes>
     </div>
   );

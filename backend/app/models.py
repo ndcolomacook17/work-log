@@ -28,7 +28,16 @@ class JiraTicket(BaseModel):
     summary: str
 
 
+class Interview(BaseModel):
+    candidate_name: str
+    job_title: str
+    interview_type: str
+    scheduled_at: str
+    status: str
+
+
 class ArtifactsResponse(BaseModel):
     pull_requests: list[PullRequest]
     confluence_docs: list[ConfluenceDoc]
     jira_tickets: list[JiraTicket]
+    interviews: list[Interview]

@@ -13,30 +13,26 @@ export function JiraCard({ ticket }: JiraCardProps) {
   };
 
   return (
-    <div className="p-4 bg-gray-900 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors">
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <a
-            href={ticket.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
-          >
-            {ticket.key}: {ticket.title}
-          </a>
-        </div>
-        <div className="flex gap-2">
-          <span
-            className={`px-2 py-1 text-xs rounded-full ${typeColors[ticket.type] || 'bg-gray-800 text-gray-400 border border-gray-700'}`}
-          >
-            {ticket.type}
-          </span>
-          <span className="px-2 py-1 text-xs rounded-full bg-gray-800 text-gray-400 border border-gray-700">
-            {ticket.status}
-          </span>
-        </div>
+    <div className="p-4 bg-gray-900 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors overflow-hidden">
+      <a
+        href={ticket.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-400 hover:text-blue-300 font-medium transition-colors block break-words"
+      >
+        {ticket.key}: {ticket.title}
+      </a>
+      <div className="mt-2 flex items-center gap-2 flex-wrap">
+        <span
+          className={`px-2 py-1 text-xs rounded-full shrink-0 ${typeColors[ticket.type] || 'bg-gray-800 text-gray-400 border border-gray-700'}`}
+        >
+          {ticket.type}
+        </span>
+        <span className="px-2 py-1 text-xs rounded-full shrink-0 bg-gray-800 text-gray-400 border border-gray-700">
+          {ticket.status}
+        </span>
       </div>
-      <p className="mt-2 text-sm text-gray-400">{ticket.summary}</p>
+      <p className="mt-2 text-sm text-gray-400 break-words">{ticket.summary}</p>
     </div>
   );
 }
